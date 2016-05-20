@@ -24,6 +24,7 @@ public class BRPlayerDeathListener implements Listener {
 	public void onDeath(PlayerDeathEvent event) {
 		Player playerLoggingOn = event.getEntity();
 
+		//Death = Removal from game
 		for(Player player : this.plugin.getCurrentBattlePlayers()) {
 			if(player.getName().equalsIgnoreCase(playerLoggingOn.getName())) {
 
