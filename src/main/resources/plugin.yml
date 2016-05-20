@@ -1,3 +1,9 @@
 name: BattleRoyale
 main: io.github.gmills82.battleroyale.BattleRoyalePlugin
 version: 1.000.000
+commands:
+   beginBattleRoyale:
+      description: Begin the Battle Royale
+      usage: /<command> [player]
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>

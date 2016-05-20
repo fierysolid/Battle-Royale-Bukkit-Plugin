@@ -1,8 +1,11 @@
 package io.github.gmills82.battleroyale;
 
+import io.github.gmills82.battleroyale.commands.BattleRoyaleCommandExecutor;
 import io.github.gmills82.battleroyale.listeners.PlayerLogonListener;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_BEGIN_BATTLE_ROYAL;
 
 /**
  * @author Grant Mills
@@ -22,7 +25,7 @@ public class BattleRoyalePlugin extends JavaPlugin implements Listener {
 
 		getServer().getPluginManager().registerEvents(new PlayerLogonListener(this), this);
 
-		this.getCommand("basic").setExecutor(new BattleRoyaleCommandExecutor(this));
+		this.getCommand(COMMAND_BEGIN_BATTLE_ROYAL).setExecutor(new BattleRoyaleCommandExecutor(this));
 	}
 
 
