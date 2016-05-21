@@ -6,7 +6,7 @@
 
   <groupId>io.github.gmills82</groupId>
   <artifactId>battleRoyale</artifactId>
-  <version>1.000.000-SNAPSHOT</version>
+  <version>1.000.000</version>
   <description>A Bukkit Minecraft plugin designed to simulate the Battle Royale movies</description>
 
   <dependencies>
