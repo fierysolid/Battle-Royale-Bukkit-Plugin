@@ -21,7 +21,7 @@ import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_BEGIN_
  */
 public class BattleRoyaleCommandExecutor implements CommandExecutor {
 
-	private static BeginBattleRoyaleService beginBattleRoyaleService = null;
+	private static BattleRoyaleCommandService battleRoyaleCommandService = null;
 	private final BattleRoyalePlugin plugin;
 	private BattleRoyaleGameState gameState;
 
@@ -42,11 +42,11 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 					Set<Player> battlePlayers = processPlayerArgs(args);
 
 					if(battlePlayers != Collections.EMPTY_LIST) {
-						if (null == beginBattleRoyaleService) {
+						if (null == battleRoyaleCommandService) {
 							//Playing pass the plugin
-							beginBattleRoyaleService = new BeginBattleRoyaleService(this.plugin, this.gameState);
+							battleRoyaleCommandService = new BattleRoyaleCommandService(this.plugin, this.gameState);
 						}
-						beginBattleRoyaleService.beginBRComand(commandSender);
+						battleRoyaleCommandService.beginBRComand(commandSender);
 
 						return true;
 					}else {

@@ -1,5 +1,6 @@
 package io.github.gmills82.battleroyale.runnables;
 
+import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import io.github.gmills82.battleroyale.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -17,10 +18,12 @@ public class DestroyChunksRunnable extends BukkitRunnable {
 	private static final long EXPLOSION_POWER = 30L;
 	private Chunk chunkToDestroy;
 	private BukkitTask playerWarningRunnable;
+	private BattleRoyaleGameState gameState;
 
-	public DestroyChunksRunnable(Chunk chunkToDestroy, BukkitTask playerWarningRunnable) {
+	public DestroyChunksRunnable(Chunk chunkToDestroy, BukkitTask playerWarningRunnable, BattleRoyaleGameState gameState) {
 		this.chunkToDestroy = chunkToDestroy;
 		this.playerWarningRunnable = playerWarningRunnable;
+		this.gameState = gameState;
 	}
 
 	@Override
@@ -47,6 +50,14 @@ public class DestroyChunksRunnable extends BukkitRunnable {
 				}
 			}
 		}
+
+		//Update gameState
+		this.gameState.getDestroyedChunkSet().add(chunkToDestroy);
+		//Ever closer to impending doom
+		this.gameState.lowerCatastrophyCounter();
+
+		//TODO: If countdown is at zero spawn catastrophy runnable
+		//TODO: Update gamestate
 
 		//Announce destruction
 		Bukkit.getServer().broadcastMessage("Quadrant destroyed at x: " + chunkCenter.getX() + " and z: " + chunkCenter.getZ());

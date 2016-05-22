@@ -28,7 +28,7 @@ import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
  * @author Grant Mills
  * @since 5/20/16
  */
-public class BeginBattleRoyaleService {
+public class BattleRoyaleCommandService {
 	//Mins
 	private static final int PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = 7;
 	private static final int DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = 0;
@@ -37,21 +37,21 @@ public class BeginBattleRoyaleService {
 	private final BattleRoyalePlugin plugin;
 	private BattleRoyaleGameState gameState;
 
-	public BeginBattleRoyaleService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
+	public BattleRoyaleCommandService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
 		this.initialWorldBorderSize = 250;
 		this.initialWorldBorderDelay = 0;
 		this.plugin = plugin;
 		this.gameState = gameState;
 	}
 
-	public BeginBattleRoyaleService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState, int startingWorldBorderSize, int initialWorldBorderDelay) {
+	public BattleRoyaleCommandService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState, int startingWorldBorderSize, int initialWorldBorderDelay) {
 		this.initialWorldBorderSize = startingWorldBorderSize;
 		this.initialWorldBorderDelay = initialWorldBorderDelay;
 		this.plugin = plugin;
 		this.gameState = gameState;
 	}
 
-	//Command method for COMMAND_BEGIN_BATTLE_ROYAL command
+	//Command - COMMAND_BEGIN_BATTLE_ROYAL command
 	public void beginBRComand(CommandSender commandSender) {
 
 		Player player = (Player) commandSender;
@@ -73,6 +73,21 @@ public class BeginBattleRoyaleService {
 		//Save off runnable so pause and resume commands have access to it
 		gameState.setDestructSequenceRunnable(destructSequenceRunnable);
 	}
+
+	//Command - COMMAND_PAUSE_BATTLE_ROYAL
+	public void pauseBRCommand(CommandSender commandSender, String battleName) {
+		if(this.gameState.getBattleName().equalsIgnoreCase(battleName)) {
+			//Cancel all runnables
+			this.gameState.getWarnPlayersRunnable().cancel();
+			this.gameState.getDestructSequenceRunnable().cancel();
+			//Message server
+		}else {
+			commandSender.sendMessage("No battles of that name were found.");
+		}
+	}
+
+	//Command - COMMAND_RESUME_BATTLE_ROYAL
+	public void resumeBRCommand(String battleName) {}
 
 	private void spreadPlayers(World world, Set<Player> battlePlayers) {
 

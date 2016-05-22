@@ -1,7 +1,7 @@
 package io.github.gmills82.battleroyale.listeners;
 
 import io.github.gmills82.battleroyale.BattleRoyaleGameState;
-import io.github.gmills82.battleroyale.commands.BeginBattleRoyaleService;
+import io.github.gmills82.battleroyale.commands.BattleRoyaleCommandService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +33,7 @@ public final class BRPlayerJoinListener implements Listener {
 				Bukkit.getLogger().info("Resetting " + playerLoggingOn.getName() + " scoreboard");
 
 				//Setup re-logging player's scoreboard again
-				BeginBattleRoyaleService.setupScoreboard(playerList);
+				BattleRoyaleCommandService.setupScoreboard(playerList);
 			}
 		}
 	}

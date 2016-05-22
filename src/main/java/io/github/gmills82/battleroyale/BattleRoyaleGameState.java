@@ -1,5 +1,6 @@
 package io.github.gmills82.battleroyale;
 
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -11,11 +12,13 @@ import java.util.Set;
  * @since 5/22/16
  */
 public class BattleRoyaleGameState {
+	private Set<Chunk> destroyedChunkSet = new HashSet<Chunk>();
 	private BukkitTask destructSequenceRunnable;
 	private BukkitTask warnPlayersRunnable;
+	private BukkitTask catastrophyRunnable;
 	private String battleName;
 	private Set<Player> battlePlayers = new HashSet<Player>();
-	//TODO: Catastrophy runnable
+	private int countdownToCatastrophy = 7;
 
 
 	public Set<Player> getCurrentBattlePlayersOnline() {
@@ -58,5 +61,21 @@ public class BattleRoyaleGameState {
 
 	public void setBattleName(String battleName) {
 		this.battleName = battleName;
+	}
+
+	public Set<Chunk> getDestroyedChunkSet() {
+		return destroyedChunkSet;
+	}
+
+	public void setDestroyedChunkSet(Set<Chunk> destroyedChunkSet) {
+		this.destroyedChunkSet = destroyedChunkSet;
+	}
+
+	public void lowerCatastrophyCounter() {
+		this.countdownToCatastrophy--;
+	}
+
+	public int getCountdownToCatastrophy() {
+		return countdownToCatastrophy;
 	}
 }

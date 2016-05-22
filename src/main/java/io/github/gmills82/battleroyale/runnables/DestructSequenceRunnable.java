@@ -10,9 +10,6 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
 
 /**
@@ -24,7 +21,6 @@ public class DestructSequenceRunnable extends BukkitRunnable {
 	private static final double PERIOD_OF_PLAYER_WARNING = 0.5;
 	private final BattleRoyalePlugin plugin;
 	private World worldToDestroy;
-	private static Set<Chunk> destroyedChunkSet = new HashSet<Chunk>();
 	private static final Integer DELAY_BEFORE_CHUNK_DESTRUCTION = 3;
 	private BattleRoyaleGameState gameState;
 
@@ -59,7 +55,7 @@ public class DestructSequenceRunnable extends BukkitRunnable {
 		gameState.setWarnPlayersRunnable(playerWarningRunnable);
 
 		// Schedule actual destruction
-		BukkitTask destoryChunksRunnable = new DestroyChunksRunnable(chunkToDestroy, playerWarningRunnable).runTaskLater(this.plugin, convertMinsToTicks(DELAY_BEFORE_CHUNK_DESTRUCTION));
+		BukkitTask destoryChunksRunnable = new DestroyChunksRunnable(chunkToDestroy, playerWarningRunnable, this.gameState).runTaskLater(this.plugin, convertMinsToTicks(DELAY_BEFORE_CHUNK_DESTRUCTION));
 	}
 
 	private Chunk determineChunkToDestroy(World world) {
@@ -69,8 +65,9 @@ public class DestructSequenceRunnable extends BukkitRunnable {
 
 		Chunk chunkToDestroy = world.getChunkAt(randomLocation);
 
-		if(!destroyedChunkSet.contains(chunkToDestroy) && chunkToDestroy != spawnChunk) {
-			destroyedChunkSet.add(chunkToDestroy);
+		if(!this.gameState.getDestroyedChunkSet().contains(chunkToDestroy) && chunkToDestroy != spawnChunk) {
+
+			//return Chunk
 			return chunkToDestroy;
 		}
 		return null;
