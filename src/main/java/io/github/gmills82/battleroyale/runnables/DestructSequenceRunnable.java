@@ -1,0 +1,71 @@
+package io.github.gmills82.battleroyale.runnables;
+
+import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.util.LocationUtil;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
+
+/**
+ * @author Grant Mills
+ * @since 5/21/16
+ */
+public class DestructSequenceRunnable extends BukkitRunnable {
+
+	public static final double PERIOD_OF_PLAYER_WARNING = 0.5;
+	private final BattleRoyalePlugin plugin;
+	private World worldToDestroy;
+	private static Set<Chunk> destroyedChunkSet = new HashSet<Chunk>();
+	private static final Integer DELAY_BEFORE_CHUNK_DESTRUCTION = 3;
+
+	public DestructSequenceRunnable(BattleRoyalePlugin plugin, World world) {
+		this.plugin = plugin;
+		this.worldToDestroy = world;
+	}
+
+	@Override
+	public void run() {
+		//Determine chunk to destroy
+		Chunk chunkToDestroy = null;
+		while(null == chunkToDestroy) {
+			chunkToDestroy = determineChunkToDestroy();
+		}
+
+		//Fire off explosions down the center of the chunk
+		Location chunkCenter = LocationUtil.findCenterTopBlockOfChunk(chunkToDestroy);
+
+		// Announce to all players the x coords and z coords of the chunk
+		// to be destroyed and the amount of real life time they have to GTFO
+		this.plugin.getServer().broadcastMessage("The quadrant centered around x: " +
+			chunkCenter.getBlockX() + " and z: " + chunkCenter.getBlockZ() + " will be destroyed in " +
+			DELAY_BEFORE_CHUNK_DESTRUCTION + " minutes");
+
+		//Schedule Player warnings
+		// 100 ticks = 5 secs
+		BukkitTask destructSequenceRunnable = new WarnPlayersOfDestructionRunnable(this.plugin, chunkToDestroy).runTaskTimer(this.plugin, 0, convertMinsToTicks(PERIOD_OF_PLAYER_WARNING));
+
+		//Schedule actual destruction
+		BukkitTask destoryChunksRunnable = new DestroyChunksRunnable(this.plugin, chunkToDestroy, destructSequenceRunnable).runTaskLater(this.plugin, convertMinsToTicks(DELAY_BEFORE_CHUNK_DESTRUCTION));
+	}
+
+	private Chunk determineChunkToDestroy() {
+		//Get random location inside border
+		Location randomLocation = LocationUtil.getRandomSurfaceLocationInsideWorldBorder(this.worldToDestroy);
+		Chunk chunkToDestroy = this.worldToDestroy.getChunkAt(randomLocation);
+
+		Chunk spawnChunk = this.worldToDestroy.getSpawnLocation().getChunk();
+
+		if(!destroyedChunkSet.contains(chunkToDestroy) && chunkToDestroy != spawnChunk) {
+			destroyedChunkSet.add(chunkToDestroy);
+			return chunkToDestroy;
+		}
+		return null;
+	}
+}
