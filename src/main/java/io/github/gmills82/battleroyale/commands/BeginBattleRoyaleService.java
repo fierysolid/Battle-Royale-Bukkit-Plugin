@@ -1,12 +1,15 @@
 package io.github.gmills82.battleroyale.commands;
 
 import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.runnables.DestructSequenceRunnable;
+import io.github.gmills82.battleroyale.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -15,13 +18,17 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+
+import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
 
 /**
  * @author Grant Mills
  * @since 5/20/16
  */
 public class BeginBattleRoyaleService {
+	//Mins
+	public static final double PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = .5;
+	public static final double DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = .5;
 	private int initialWorldBorderSize;
 	private int initialWorldBorderDelay;
 	private final BattleRoyalePlugin plugin;
@@ -42,7 +49,6 @@ public class BeginBattleRoyaleService {
 	public void beginBRComand(List<Player> battlePlayers, CommandSender commandSender) {
 
 		Player player = (Player) commandSender;
-
 		World world = player.getWorld();
 
 		//Setup world border
@@ -53,23 +59,15 @@ public class BeginBattleRoyaleService {
 
 		this.spreadPlayers(world, battlePlayers);
 
-		//TODO: Spawn scheduler process to remove sections of the map
-
+		// Spawn scheduler process to remove sections of the map twice a day
+		// 1 Day = 24000
+		BukkitTask destructSequenceRunnable = new DestructSequenceRunnable(this.plugin, world).
+			runTaskTimer(this.plugin, convertMinsToTicks(DELAY_OF_CHUNK_DESTRUCT_SEQUENCE), convertMinsToTicks(PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE));
 	}
 
 	private void spreadPlayers(World world, List<Player> battlePlayers) {
-		Location spawn = world.getSpawnLocation();
 
 		List<Location> placedPlayerLocations = new ArrayList<Location>();
-
-		// This get a Random with a MaxRange
-		Integer maxDistance = this.initialWorldBorderSize / 2;
-
-		//Buffered upper bound
-		double xUpperBound = (spawn.getX() + maxDistance) - 2;
-		double xLowerBound = (spawn.getX() - maxDistance) - 2;
-		double zUpperBound = (spawn.getZ() + maxDistance) - 2;
-		double zLowerBound = (spawn.getZ() - maxDistance) - 2;
 
 		for(Player player : battlePlayers) {
 
@@ -84,23 +82,13 @@ public class BeginBattleRoyaleService {
 				//Increment count of attempts
 				totalAttemptsToPlacePlayer++;
 
-				//Get random location on map
-				Double currentRandoX = ThreadLocalRandom.current().nextDouble(xLowerBound, xUpperBound + 1);
-				Double currentRandoZ = ThreadLocalRandom.current().nextDouble(zLowerBound, zUpperBound + 1);
-
-				// New Location in the right World you want
-				Location randomlocation = new Location(world, 0, 0, 0);
-				randomlocation.setX(currentRandoX);
-				randomlocation.setZ(currentRandoZ);
-
-				// Get the Highest Block of the Location for Save Spawn.
-				randomlocation.setY(world.getHighestBlockAt(randomlocation.getBlockX(), randomlocation.getBlockZ()).getY());
+				Location randomLocation = LocationUtil.getRandomSurfaceLocationInsideWorldBorder(world);
 
 				//If list is empty location is acceptable by default
 				if(placedPlayerLocations.equals(Collections.EMPTY_LIST)) {
 					//If list is empty go ahead and add the player
-					placedPlayerLocations.add(randomlocation);
-					player.teleport(randomlocation);
+					placedPlayerLocations.add(randomLocation);
+					player.teleport(randomLocation);
 					playerSet = true;
 
 				} else {
@@ -110,22 +98,22 @@ public class BeginBattleRoyaleService {
 						Boolean locationAcceptableToOtherPlayers = true;
 
 						for (Location location : placedPlayerLocations) {
-							if (location.distance(randomlocation) < minimumAcceptablePlayerSpread) {
+							if (location.distance(randomLocation) < minimumAcceptablePlayerSpread) {
 								locationAcceptableToOtherPlayers = false;
 							}
 						}
 
 						//If good location
 						if (locationAcceptableToOtherPlayers) {
-							placedPlayerLocations.add(randomlocation);
-							player.teleport(randomlocation);
+							placedPlayerLocations.add(randomLocation);
+							player.teleport(randomLocation);
 							playerSet = true;
 						}
 					}else {
 						//If we can't find a good one keep what we have
 						this.plugin.getLogger().info("Player " + player.getName() + " was given a less than acceptable starting location.");
-						placedPlayerLocations.add(randomlocation);
-						player.teleport(randomlocation);
+						placedPlayerLocations.add(randomLocation);
+						player.teleport(randomLocation);
 						playerSet = true;
 					}
 				}
@@ -162,12 +150,9 @@ public class BeginBattleRoyaleService {
 			}
 			allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
 
-			for (Player loopPlayer : battlePlayers) {
-				loopPlayer.sendMessage("The fighting arena is centered on x: " + worldborder.getCenter().getX() + " z: " + worldborder.getCenter().getZ() + ".");
-				loopPlayer.sendMessage("You're locked in!");
-				loopPlayer.sendMessage("Fight!");
-				loopPlayer.sendMessage("Fighters include: " + allPlayerNames);
-			}
+			this.plugin.getServer().broadcastMessage("The fighting arena is " + initialWorldBorderSize + " blocks square.");
+			this.plugin.getServer().broadcastMessage("Fierce contestants include: " + allPlayerNames);
+			this.plugin.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
 
 			plugin.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
 		}else {

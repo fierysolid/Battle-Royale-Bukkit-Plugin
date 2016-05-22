@@ -1,8 +1,10 @@
 package io.github.gmills82.battleroyale;
 
 import io.github.gmills82.battleroyale.commands.BattleRoyaleCommandExecutor;
+import io.github.gmills82.battleroyale.listeners.BRPlayerDeathListener;
 import io.github.gmills82.battleroyale.listeners.BRPlayerJoinListener;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -25,18 +27,28 @@ public class BattleRoyalePlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		//Example of logger usage
-		getLogger().info("onEnable has been invoked!");
 
-		//Register PlayerLogonListener
-		getServer().getPluginManager().registerEvents(new BRPlayerJoinListener(this), this);
+		//Register Event Listeners
+		PluginManager pluginManager = getServer().getPluginManager();
+		pluginManager.registerEvents(new BRPlayerJoinListener(this), this);
+		pluginManager.registerEvents(new BRPlayerDeathListener(this), this);
 
-		//Register Command Executor
+		//Register Command Executors
 		this.getCommand(COMMAND_BEGIN_BATTLE_ROYAL).setExecutor(new BattleRoyaleCommandExecutor(this));
 	}
 
 	public List<Player> getCurrentBattlePlayers() {
 		return currentBattlePlayers;
+	}
+
+	public List<Player> getCurrentBattlePlayersOnline() {
+		List<Player> onlineBattlePlayers = new ArrayList<Player>();
+		for(Player player : currentBattlePlayers) {
+			if(player.isOnline()) {
+				onlineBattlePlayers.add(player);
+			}
+		}
+		return onlineBattlePlayers;
 	}
 
 	public void setCurrentBattlePlayers(List<Player> currentBattlePlayers) {

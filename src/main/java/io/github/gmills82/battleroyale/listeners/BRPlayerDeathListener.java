@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ import java.util.List;
 public class BRPlayerDeathListener implements Listener {
 
 	private final BattleRoyalePlugin plugin;
+	private Collection<String> deathPhrases;
 
 	public BRPlayerDeathListener(BattleRoyalePlugin plugin) {
 		this.plugin = plugin;
@@ -27,6 +29,8 @@ public class BRPlayerDeathListener implements Listener {
 		//Death = Removal from game
 		for(Player player : this.plugin.getCurrentBattlePlayers()) {
 			if(player.getName().equalsIgnoreCase(playerLoggingOn.getName())) {
+
+				this.plugin.getServer().broadcastMessage(player.getName() + " is dead! Fight harder!");
 
 				//Remove player and reset list
 				List<Player> newPlayerList = this.plugin.getCurrentBattlePlayers();
