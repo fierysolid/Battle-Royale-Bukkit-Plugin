@@ -1,13 +1,11 @@
 package io.github.gmills82.battleroyale.listeners;
 
-import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.BattleRoyaleGameState;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Grant Mills
@@ -15,11 +13,10 @@ import java.util.List;
  */
 public class BRPlayerDeathListener implements Listener {
 
-	private final BattleRoyalePlugin plugin;
-	private Collection<String> deathPhrases;
+	private BattleRoyaleGameState gameState;
 
-	public BRPlayerDeathListener(BattleRoyalePlugin plugin) {
-		this.plugin = plugin;
+	public BRPlayerDeathListener(BattleRoyaleGameState gameState) {
+		this.gameState = gameState;
 	}
 
 	@EventHandler
@@ -27,15 +24,13 @@ public class BRPlayerDeathListener implements Listener {
 		Player playerLoggingOn = event.getEntity();
 
 		//Death = Removal from game
-		for(Player player : this.plugin.getCurrentBattlePlayers()) {
+		for(Player player : gameState.getBattlePlayers()) {
 			if(player.getName().equalsIgnoreCase(playerLoggingOn.getName())) {
 
-				this.plugin.getServer().broadcastMessage(player.getName() + " is dead! Fight harder!");
+				Bukkit.getServer().broadcastMessage(player.getName() + " is dead! Fight harder!");
 
 				//Remove player and reset list
-				List<Player> newPlayerList = this.plugin.getCurrentBattlePlayers();
-				newPlayerList.remove(player);
-				this.plugin.setCurrentBattlePlayers(newPlayerList);
+				gameState.getBattlePlayers().remove(player);
 			}
 		}
 	}

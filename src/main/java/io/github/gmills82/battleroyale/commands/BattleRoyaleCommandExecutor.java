@@ -1,5 +1,6 @@
 package io.github.gmills82.battleroyale.commands;
 
+import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import io.github.gmills82.battleroyale.BattleRoyalePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -7,10 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_BEGIN_BATTLE_ROYAL;
 
@@ -22,9 +23,11 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 
 	private static BeginBattleRoyaleService beginBattleRoyaleService = null;
 	private final BattleRoyalePlugin plugin;
+	private BattleRoyaleGameState gameState;
 
-	public BattleRoyaleCommandExecutor(BattleRoyalePlugin plugin) {
+	public BattleRoyaleCommandExecutor(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
 		this.plugin = plugin; // Store the plugin in situations where you need it.
+		this.gameState = gameState;
 	}
 
 	@Override
@@ -36,14 +39,14 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 			if (command.getName().equalsIgnoreCase(COMMAND_BEGIN_BATTLE_ROYAL)) {
 				if(args.length > 0) {
 
-					List<Player> battlePlayers = processPlayerArgs(args);
+					Set<Player> battlePlayers = processPlayerArgs(args);
 
 					if(battlePlayers != Collections.EMPTY_LIST) {
 						if (null == beginBattleRoyaleService) {
 							//Playing pass the plugin
-							beginBattleRoyaleService = new BeginBattleRoyaleService(this.plugin);
+							beginBattleRoyaleService = new BeginBattleRoyaleService(this.plugin, this.gameState);
 						}
-						beginBattleRoyaleService.beginBRComand(battlePlayers, commandSender);
+						beginBattleRoyaleService.beginBRComand(commandSender);
 
 						return true;
 					}else {
@@ -60,8 +63,8 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 		return false;
 	}
 
-	private List<Player> processPlayerArgs(String[] args) {
-		List<Player> battlePlayers = new ArrayList<Player>();
+	private Set<Player> processPlayerArgs(String[] args) {
+		Set<Player> battlePlayers = new HashSet<Player>();
 		Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 
 		for(int i = 0; i < args.length; i++) {
@@ -73,7 +76,7 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 		}
 
 		//Set players on plugin
-		this.plugin.setCurrentBattlePlayers(battlePlayers);
+		gameState.setBattlePlayers(battlePlayers);
 
 		return battlePlayers;
 	}

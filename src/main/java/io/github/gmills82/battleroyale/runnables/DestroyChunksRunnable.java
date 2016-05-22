@@ -1,7 +1,7 @@
 package io.github.gmills82.battleroyale.runnables;
 
-import io.github.gmills82.battleroyale.BattleRoyalePlugin;
 import io.github.gmills82.battleroyale.util.LocationUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,13 +14,11 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class DestroyChunksRunnable extends BukkitRunnable {
 
-	public static final long EXPLOSION_POWER = 30L;
-	private final BattleRoyalePlugin plugin;
+	private static final long EXPLOSION_POWER = 30L;
 	private Chunk chunkToDestroy;
 	private BukkitTask playerWarningRunnable;
 
-	public DestroyChunksRunnable(BattleRoyalePlugin plugin, Chunk chunkToDestroy, BukkitTask playerWarningRunnable) {
-		this.plugin = plugin;
+	public DestroyChunksRunnable(Chunk chunkToDestroy, BukkitTask playerWarningRunnable) {
 		this.chunkToDestroy = chunkToDestroy;
 		this.playerWarningRunnable = playerWarningRunnable;
 	}
@@ -51,7 +49,7 @@ public class DestroyChunksRunnable extends BukkitRunnable {
 		}
 
 		//Announce destruction
-		this.plugin.getServer().broadcastMessage("Quadrant destroyed at x: " + chunkCenter.getX() + " and z: " + chunkCenter.getZ());
+		Bukkit.getServer().broadcastMessage("Quadrant destroyed at x: " + chunkCenter.getX() + " and z: " + chunkCenter.getZ());
 	}
 
 }

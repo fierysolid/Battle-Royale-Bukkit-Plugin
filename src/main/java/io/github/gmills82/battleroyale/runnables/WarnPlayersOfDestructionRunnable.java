@@ -1,6 +1,6 @@
 package io.github.gmills82.battleroyale.runnables;
 
-import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -12,12 +12,12 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class WarnPlayersOfDestructionRunnable extends BukkitRunnable {
 
-	private final BattleRoyalePlugin plugin;
+	private BattleRoyaleGameState gameState;
 	private Chunk chunkToDestroy;
 
-	public WarnPlayersOfDestructionRunnable(BattleRoyalePlugin plugin, Chunk chunkToDestroy) {
-		this.plugin = plugin;
+	public WarnPlayersOfDestructionRunnable(BattleRoyaleGameState gameState, Chunk chunkToDestroy) {
 		this.chunkToDestroy = chunkToDestroy;
+		this.gameState = gameState;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class WarnPlayersOfDestructionRunnable extends BukkitRunnable {
 		// Check for players inside the chunk
 		// Tell each player individually if they need to move
 		// Should happen at a repeating countdown interval until the chunk is destroyed
-		for(Player battlePlayer : this.plugin.getCurrentBattlePlayersOnline()) {
+		for(Player battlePlayer : gameState.getCurrentBattlePlayersOnline()) {
 			if(battlePlayer.getLocation().getChunk() == chunkToDestroy) {
 				battlePlayer.sendMessage(ChatColor.RED + "Evacuate! This area is scheduled for destruction.");
 			}

@@ -1,5 +1,6 @@
 package io.github.gmills82.battleroyale.commands;
 
+import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import io.github.gmills82.battleroyale.BattleRoyalePlugin;
 import io.github.gmills82.battleroyale.runnables.DestructSequenceRunnable;
 import io.github.gmills82.battleroyale.util.LocationUtil;
@@ -19,6 +20,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
 
@@ -33,40 +35,46 @@ public class BeginBattleRoyaleService {
 	private int initialWorldBorderSize;
 	private int initialWorldBorderDelay;
 	private final BattleRoyalePlugin plugin;
+	private BattleRoyaleGameState gameState;
 
-	public BeginBattleRoyaleService(BattleRoyalePlugin plugin) {
+	public BeginBattleRoyaleService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
 		this.initialWorldBorderSize = 250;
 		this.initialWorldBorderDelay = 0;
 		this.plugin = plugin;
+		this.gameState = gameState;
 	}
 
-	public BeginBattleRoyaleService(BattleRoyalePlugin plugin, int startingWorldBorderSize, int initialWorldBorderDelay) {
+	public BeginBattleRoyaleService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState, int startingWorldBorderSize, int initialWorldBorderDelay) {
 		this.initialWorldBorderSize = startingWorldBorderSize;
 		this.initialWorldBorderDelay = initialWorldBorderDelay;
 		this.plugin = plugin;
+		this.gameState = gameState;
 	}
 
 	//Command method for COMMAND_BEGIN_BATTLE_ROYAL command
-	public void beginBRComand(List<Player> battlePlayers, CommandSender commandSender) {
+	public void beginBRComand(CommandSender commandSender) {
 
 		Player player = (Player) commandSender;
 		World world = player.getWorld();
 
 		//Setup world border
-		this.setupWorldBorder(world, battlePlayers);
+		this.setupWorldBorder(world, gameState.getCurrentBattlePlayersOnline());
 
 		//Setup scoreboard and display
-		setupScoreboard(battlePlayers);
+		setupScoreboard(gameState.getCurrentBattlePlayersOnline());
 
-		this.spreadPlayers(world, battlePlayers);
+		this.spreadPlayers(world, gameState.getCurrentBattlePlayersOnline());
 
 		// Spawn scheduler process to remove sections of the map twice a day
 		// 1 Day = 24000
-		BukkitTask destructSequenceRunnable = new DestructSequenceRunnable(this.plugin, world).
+		BukkitTask destructSequenceRunnable = new DestructSequenceRunnable(this.plugin, world, this.gameState).
 			runTaskTimer(this.plugin, convertMinsToTicks(DELAY_OF_CHUNK_DESTRUCT_SEQUENCE), convertMinsToTicks(PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE));
+
+		//Save off runnable so pause and resume commands have access to it
+		gameState.setDestructSequenceRunnable(destructSequenceRunnable);
 	}
 
-	private void spreadPlayers(World world, List<Player> battlePlayers) {
+	private void spreadPlayers(World world, Set<Player> battlePlayers) {
 
 		List<Location> placedPlayerLocations = new ArrayList<Location>();
 
@@ -112,7 +120,7 @@ public class BeginBattleRoyaleService {
 						}
 					}else {
 						//If we can't find a good one keep what we have
-						this.plugin.getLogger().info("Player " + player.getName() + " was given a less than acceptable starting location.");
+						Bukkit.getLogger().info("Player " + player.getName() + " was given a less than acceptable starting location.");
 						placedPlayerLocations.add(randomLocation);
 						player.teleport(randomLocation);
 						playerSet = true;
@@ -122,7 +130,7 @@ public class BeginBattleRoyaleService {
 		}
 	}
 
-	public static void setupScoreboard(List<Player> battlePlayers) {
+	public static void setupScoreboard(Set<Player> battlePlayers) {
 		//Get scoreboard manager
 		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 
@@ -137,7 +145,7 @@ public class BeginBattleRoyaleService {
 		}
 	}
 
-	private void setupWorldBorder(World world, List<Player> battlePlayers) {
+	private void setupWorldBorder(World world, Set<Player> battlePlayers) {
 		if(null != world) {
 
 			WorldBorder worldborder = world.getWorldBorder();
@@ -151,11 +159,11 @@ public class BeginBattleRoyaleService {
 			}
 			allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
 
-			this.plugin.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + initialWorldBorderSize + ChatColor.BLACK + " blocks square.");
-			this.plugin.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
-			this.plugin.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
+			Bukkit.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + initialWorldBorderSize + ChatColor.BLACK + " blocks square.");
+			Bukkit.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
+			Bukkit.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
 
-			plugin.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
+			Bukkit.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
 		}else {
 			throw new IllegalArgumentException("World was null when setup attempted.");
 		}
