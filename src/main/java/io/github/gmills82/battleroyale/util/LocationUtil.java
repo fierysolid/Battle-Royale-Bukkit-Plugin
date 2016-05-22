@@ -11,26 +11,23 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 5/20/16
  */
 public class LocationUtil {
+
 	public static Location getRandomSurfaceLocationInsideWorldBorder(World world) {
-		Location spawn = world.getSpawnLocation();
 
 		// This get a Random with a MaxRange
 		double maxDistance = world.getWorldBorder().getSize() / 2;
+		Location worldBorderCenter = world.getWorldBorder().getCenter();
 
 		//Buffered upper bound
-		double xUpperBound = (spawn.getX() + maxDistance) - 2;
-		double xLowerBound = (spawn.getX() - maxDistance) - 2;
-		double zUpperBound = (spawn.getZ() + maxDistance) - 2;
-		double zLowerBound = (spawn.getZ() - maxDistance) - 2;
+		Location maxLocation = new Location(world, worldBorderCenter.getX() + maxDistance, 0, worldBorderCenter.getZ() + maxDistance);
+		Location minLocation = new Location(world, worldBorderCenter.getX() - maxDistance, 0, worldBorderCenter.getZ() - maxDistance);
 
-		//Get random location on map
-		Double currentRandoX = ThreadLocalRandom.current().nextDouble(xLowerBound, xUpperBound + 1);
-		Double currentRandoZ = ThreadLocalRandom.current().nextDouble(zLowerBound, zUpperBound + 1);
+		// Get random location on map
+		Double currentRandoX = ThreadLocalRandom.current().nextDouble(minLocation.getX(), maxLocation.getX());
+		Double currentRandoZ = ThreadLocalRandom.current().nextDouble(minLocation.getZ(), maxLocation.getZ());
 
 		// New Location in the right World you want
-		Location randomlocation = new Location(world, 0, 0, 0);
-		randomlocation.setX(currentRandoX);
-		randomlocation.setZ(currentRandoZ);
+		Location randomlocation = new Location(world, currentRandoX, 0, currentRandoZ);
 
 		// Get the Highest Block of the Location for Save Spawn.
 		randomlocation.setY(world.getHighestBlockAt(randomlocation.getBlockX(), randomlocation.getBlockZ()).getY());
@@ -39,10 +36,8 @@ public class LocationUtil {
 	}
 
 	public static Location findCenterTopBlockOfChunk(Chunk chunk) {
-		Location chunkCenter = new Location(chunk.getWorld(), 0, 0, 0);
+		Location chunkCenter = new Location(chunk.getWorld(), chunk.getBlock(0,0,0).getX() + 8, 0, chunk.getBlock(0,0,0).getZ() + 8);
 
-		chunkCenter.setX(chunk.getX() - 8);
-		chunkCenter.setZ(chunk.getZ() + 9);
 		chunkCenter.setY(chunkCenter.getWorld().getHighestBlockAt(chunkCenter.getBlockX(), chunkCenter.getBlockZ()).getY());
 
 		return chunkCenter;

@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
  */
 public class DestroyChunksRunnable extends BukkitRunnable {
 
+	public static final long EXPLOSION_POWER = 30L;
 	private final BattleRoyalePlugin plugin;
 	private Chunk chunkToDestroy;
 	private BukkitTask playerWarningRunnable;
@@ -29,28 +30,28 @@ public class DestroyChunksRunnable extends BukkitRunnable {
 		playerWarningRunnable.cancel();
 
 		//Fire off explosions down the center of the chunk
-		Location chunkCenter = LocationUtil.findCenterTopBlockOfChunk(chunkToDestroy);
-		int i = 0;
-		while(i <= 7){
-			chunkToDestroy.getWorld().createExplosion(chunkCenter, 16L, true);
-			chunkCenter.setY((chunkCenter.getY() * 4) / 5);
-			i++;
+		Location chunkCenter = LocationUtil.findCenterTopBlockOfChunk(this.chunkToDestroy);
+		int i = 5;
+		while(i > 0){
+			this.chunkToDestroy.getWorld().createExplosion(chunkCenter, EXPLOSION_POWER, true);
+			chunkCenter.setY((chunkCenter.getY() * i) / 6);
+			i--;
 		}
 
 		//Actually destroy the chunk by filling it with air
 		//Get each block in a chunk and change to air
-		int X = chunkToDestroy.getX() * 16;
-		int Z = chunkToDestroy.getZ() * 16;
+		int X = this.chunkToDestroy.getX() * 16;
+		int Z = this.chunkToDestroy.getZ() * 16;
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				for (int y = 0; y < 128; y++) {
-					chunkToDestroy.getBlock(X+x, y, Z+z).setType(Material.AIR);
+					this.chunkToDestroy.getBlock(X+x, y, Z+z).setType(Material.AIR);
 				}
 			}
 		}
 
 		//Announce destruction
-		this.plugin.getServer().broadcastMessage("Chunk destroyed at x: " + chunkCenter.getBlockX() + " and z: " + chunkCenter.getBlockZ());
+		this.plugin.getServer().broadcastMessage("Quadrant destroyed at x: " + chunkCenter.getX() + " and z: " + chunkCenter.getZ());
 	}
 
 }

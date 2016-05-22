@@ -19,7 +19,7 @@ import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
  */
 public class DestructSequenceRunnable extends BukkitRunnable {
 
-	public static final double PERIOD_OF_PLAYER_WARNING = 0.5;
+	private static final double PERIOD_OF_PLAYER_WARNING = 0.5;
 	private final BattleRoyalePlugin plugin;
 	private World worldToDestroy;
 	private static Set<Chunk> destroyedChunkSet = new HashSet<Chunk>();
@@ -32,35 +32,35 @@ public class DestructSequenceRunnable extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		//Determine chunk to destroy
+		// Determine chunk to destroy
 		Chunk chunkToDestroy = null;
 		while(null == chunkToDestroy) {
-			chunkToDestroy = determineChunkToDestroy();
+			chunkToDestroy = determineChunkToDestroy(worldToDestroy);
 		}
 
-		//Fire off explosions down the center of the chunk
+		// Fire off explosions down the center of the chunk
 		Location chunkCenter = LocationUtil.findCenterTopBlockOfChunk(chunkToDestroy);
 
 		// Announce to all players the x coords and z coords of the chunk
 		// to be destroyed and the amount of real life time they have to GTFO
 		this.plugin.getServer().broadcastMessage("The quadrant centered around x: " +
-			chunkCenter.getBlockX() + " and z: " + chunkCenter.getBlockZ() + " will be destroyed in " +
+			chunkCenter.getX() + " and z: " + chunkCenter.getZ() + " will be destroyed in " +
 			DELAY_BEFORE_CHUNK_DESTRUCTION + " minutes");
 
-		//Schedule Player warnings
+		// Schedule Player warnings
 		// 100 ticks = 5 secs
 		BukkitTask destructSequenceRunnable = new WarnPlayersOfDestructionRunnable(this.plugin, chunkToDestroy).runTaskTimer(this.plugin, 0, convertMinsToTicks(PERIOD_OF_PLAYER_WARNING));
 
-		//Schedule actual destruction
+		// Schedule actual destruction
 		BukkitTask destoryChunksRunnable = new DestroyChunksRunnable(this.plugin, chunkToDestroy, destructSequenceRunnable).runTaskLater(this.plugin, convertMinsToTicks(DELAY_BEFORE_CHUNK_DESTRUCTION));
 	}
 
-	private Chunk determineChunkToDestroy() {
-		//Get random location inside border
-		Location randomLocation = LocationUtil.getRandomSurfaceLocationInsideWorldBorder(this.worldToDestroy);
-		Chunk chunkToDestroy = this.worldToDestroy.getChunkAt(randomLocation);
+	private Chunk determineChunkToDestroy(World world) {
+		// Get random location inside border
+		Location randomLocation = LocationUtil.getRandomSurfaceLocationInsideWorldBorder(world);
+		Chunk spawnChunk = world.getSpawnLocation().getChunk();
 
-		Chunk spawnChunk = this.worldToDestroy.getSpawnLocation().getChunk();
+		Chunk chunkToDestroy = world.getChunkAt(randomLocation);
 
 		if(!destroyedChunkSet.contains(chunkToDestroy) && chunkToDestroy != spawnChunk) {
 			destroyedChunkSet.add(chunkToDestroy);

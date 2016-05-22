@@ -4,6 +4,7 @@ import io.github.gmills82.battleroyale.BattleRoyalePlugin;
 import io.github.gmills82.battleroyale.runnables.DestructSequenceRunnable;
 import io.github.gmills82.battleroyale.util.LocationUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
@@ -27,15 +28,15 @@ import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
  */
 public class BeginBattleRoyaleService {
 	//Mins
-	public static final double PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = .5;
-	public static final double DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = .5;
+	private static final int PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = 7;
+	private static final int DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = 0;
 	private int initialWorldBorderSize;
 	private int initialWorldBorderDelay;
 	private final BattleRoyalePlugin plugin;
 
 	public BeginBattleRoyaleService(BattleRoyalePlugin plugin) {
 		this.initialWorldBorderSize = 250;
-		this.initialWorldBorderDelay = 5;
+		this.initialWorldBorderDelay = 0;
 		this.plugin = plugin;
 	}
 
@@ -150,8 +151,8 @@ public class BeginBattleRoyaleService {
 			}
 			allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
 
-			this.plugin.getServer().broadcastMessage("The fighting arena is " + initialWorldBorderSize + " blocks square.");
-			this.plugin.getServer().broadcastMessage("Fierce contestants include: " + allPlayerNames);
+			this.plugin.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + initialWorldBorderSize + ChatColor.BLACK + " blocks square.");
+			this.plugin.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
 			this.plugin.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
 
 			plugin.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
