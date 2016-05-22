@@ -1,10 +1,13 @@
 package io.github.gmills82.battleroyale;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,6 +23,15 @@ public class BattleRoyaleGameState {
 	private Set<Player> battlePlayers = new HashSet<Player>();
 	private int countdownToCatastrophy = 7;
 
+	public BattleRoyaleGameState() {
+		//Set global pvp to false and set adventure mode
+		Bukkit.getWorlds().get(0).setPVP(false);
+
+		List<Player> allPlayers = Bukkit.getWorlds().get(0).getPlayers();
+		for(Player player: allPlayers) {
+			player.setGameMode(GameMode.ADVENTURE);
+		}
+	}
 
 	public Set<Player> getCurrentBattlePlayersOnline() {
 		Set<Player> onlineBattlePlayers = new HashSet<Player>();
@@ -78,4 +90,5 @@ public class BattleRoyaleGameState {
 	public int getCountdownToCatastrophy() {
 		return countdownToCatastrophy;
 	}
+
 }

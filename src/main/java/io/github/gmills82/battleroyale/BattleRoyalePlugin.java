@@ -1,12 +1,16 @@
 package io.github.gmills82.battleroyale;
 
-import io.github.gmills82.battleroyale.commands.BattleRoyaleCommandExecutor;
+import io.github.gmills82.battleroyale.commands.BattleRoyaleCommandService;
+import io.github.gmills82.battleroyale.commands.BeginCommandExecutor;
+import io.github.gmills82.battleroyale.commands.PauseCommandExecutor;
 import io.github.gmills82.battleroyale.listeners.BRPlayerDeathListener;
 import io.github.gmills82.battleroyale.listeners.BRPlayerJoinListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_BEGIN_BATTLE_ROYAL;
+import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_PAUSE_BATTLE_ROYAL;
+import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_RESUME_BATTLE_ROYAL;
 
 /**
  * @author Grant Mills
@@ -31,8 +35,13 @@ public class BattleRoyalePlugin extends JavaPlugin {
 		pluginManager.registerEvents(new BRPlayerJoinListener(gameState), this);
 		pluginManager.registerEvents(new BRPlayerDeathListener(gameState), this);
 
+		//Create Command Service
+		BattleRoyaleCommandService battleRoyaleCommandService = new BattleRoyaleCommandService(this, this.gameState);
+
 		//Register Command Executors
-		this.getCommand(COMMAND_BEGIN_BATTLE_ROYAL).setExecutor(new BattleRoyaleCommandExecutor(this, gameState));
+		this.getCommand(COMMAND_BEGIN_BATTLE_ROYAL).setExecutor(new BeginCommandExecutor(battleRoyaleCommandService));
+		this.getCommand(COMMAND_PAUSE_BATTLE_ROYAL).setExecutor(new PauseCommandExecutor(battleRoyaleCommandService));
+		this.getCommand(COMMAND_RESUME_BATTLE_ROYAL).setExecutor(new PauseCommandExecutor(battleRoyaleCommandService));
 	}
 
 	public BattleRoyaleGameState getGameState() {

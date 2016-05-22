@@ -1,15 +1,16 @@
 package io.github.gmills82.battleroyale.listeners;
 
 import io.github.gmills82.battleroyale.BattleRoyaleGameState;
-import io.github.gmills82.battleroyale.commands.BattleRoyaleCommandService;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 /**
  * @author Grant Mills
@@ -26,15 +27,20 @@ public final class BRPlayerJoinListener implements Listener {
 	public void onLogin(PlayerJoinEvent event) {
 		Player playerLoggingOn = event.getPlayer();
 
-		for(Player player : gameState.getBattlePlayers()) {
-			if(player.getName().equalsIgnoreCase(playerLoggingOn.getName())) {
-				Set<Player> playerList = new HashSet<Player>();
-				playerList.add(playerLoggingOn);
-				Bukkit.getLogger().info("Resetting " + playerLoggingOn.getName() + " scoreboard");
+		//Default everyone to adventure
+		playerLoggingOn.setGameMode(GameMode.ADVENTURE);
 
-				//Setup re-logging player's scoreboard again
-				BattleRoyaleCommandService.setupScoreboard(playerList);
-			}
-		}
+		//Setup player's scoreboard
+		//Get scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+
+		//Setup health scoreboard
+		Scoreboard healthScoreboard = scoreboardManager.getNewScoreboard();
+		Objective healthObjective = healthScoreboard.registerNewObjective("Health", "health");
+		healthObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		healthObjective.setDisplayName("The Living: ");
+
+		playerLoggingOn.setScoreboard(healthScoreboard);
+
 	}
 }

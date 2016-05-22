@@ -27,7 +27,7 @@ public class BRPlayerDeathListener implements Listener {
 		for(Player player : gameState.getBattlePlayers()) {
 			if(player.getName().equalsIgnoreCase(playerLoggingOn.getName())) {
 
-				Bukkit.getServer().broadcastMessage(player.getName() + " is dead! Fight harder!");
+				Bukkit.getServer().broadcastMessage(player.getName() + " was killed by " + player.getKiller() + "! Fight harder!");
 
 				//Remove player and reset list
 				gameState.getBattlePlayers().remove(player);

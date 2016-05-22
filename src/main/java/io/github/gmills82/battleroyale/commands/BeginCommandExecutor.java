@@ -1,7 +1,5 @@
 package io.github.gmills82.battleroyale.commands;
 
-import io.github.gmills82.battleroyale.BattleRoyaleGameState;
-import io.github.gmills82.battleroyale.BattleRoyalePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,15 +17,12 @@ import static io.github.gmills82.battleroyale.constants.Constants.COMMAND_BEGIN_
  * @author Grant Mills
  * @since 5/20/16
  */
-public class BattleRoyaleCommandExecutor implements CommandExecutor {
+public class BeginCommandExecutor implements CommandExecutor {
 
-	private static BattleRoyaleCommandService battleRoyaleCommandService = null;
-	private final BattleRoyalePlugin plugin;
-	private BattleRoyaleGameState gameState;
+	private BattleRoyaleCommandService commandService;
 
-	public BattleRoyaleCommandExecutor(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
-		this.plugin = plugin; // Store the plugin in situations where you need it.
-		this.gameState = gameState;
+	public BeginCommandExecutor(BattleRoyaleCommandService commandService) {
+		this.commandService = commandService; // Store the plugin in situations where you need it.
 	}
 
 	@Override
@@ -37,17 +32,12 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 
 			//Check which command was executed
 			if (command.getName().equalsIgnoreCase(COMMAND_BEGIN_BATTLE_ROYAL)) {
-				if(args.length > 0) {
+				if(args.length >= 2) {
 
 					Set<Player> battlePlayers = processPlayerArgs(args);
 
 					if(battlePlayers != Collections.EMPTY_LIST) {
-						if (null == battleRoyaleCommandService) {
-							//Playing pass the plugin
-							battleRoyaleCommandService = new BattleRoyaleCommandService(this.plugin, this.gameState);
-						}
-						battleRoyaleCommandService.beginBRComand(commandSender);
-
+						commandService.beginBRComand(commandSender, args[0], battlePlayers);
 						return true;
 					}else {
 						commandSender.sendMessage("No online players found.");
@@ -67,16 +57,13 @@ public class BattleRoyaleCommandExecutor implements CommandExecutor {
 		Set<Player> battlePlayers = new HashSet<Player>();
 		Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 
-		for(int i = 0; i < args.length; i++) {
+		for(int i = 1; i < args.length; i++) {
 			for(Player player : onlinePlayers) {
 				if (args[i].equalsIgnoreCase(player.getName())) {
 					battlePlayers.add(player);
 				}
 			}
 		}
-
-		//Set players on plugin
-		gameState.setBattlePlayers(battlePlayers);
 
 		return battlePlayers;
 	}
