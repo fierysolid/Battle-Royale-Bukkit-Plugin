@@ -34,6 +34,6 @@ public class Necromancer implements PlayerGift {
 			player.getInventory().addItem(eggStack);
 		}
 		player.getInventory().setHelmet(this.helm);
-		player.sendMessage(ChatColor.DARK_RED + "She lifted her veil slowly. What a sight presented itself to my startled eyes! I beheld before me an animated corpse.");
+		player.sendMessage(ChatColor.DARK_RED + "The Necromancer");
 	}
 }

@@ -1,6 +1,7 @@
 package io.github.gmills82.battleroyale.gifts.impl;
 
 import io.github.gmills82.battleroyale.gifts.PlayerGift;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -36,6 +37,6 @@ public class Glutton implements PlayerGift {
 			player.getInventory().addItem(item);
 		}
 		player.getInventory().setItemInMainHand(this.spoon);
-		player.sendMessage("Everything in this room is edible. Even I'm edible. But, that would be called cannibalism. It is looked down upon in most societies.");
+		player.sendMessage(ChatColor.DARK_PURPLE + "Everything in this room is edible. Even I'm edible. But, that would be called cannibalism. It is looked down upon in most societies.");
 	}
 }

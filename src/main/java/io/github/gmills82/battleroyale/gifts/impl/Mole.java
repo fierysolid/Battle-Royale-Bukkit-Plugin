@@ -43,6 +43,6 @@ public class Mole implements PlayerGift {
 		player.getInventory().setItemInMainHand(this.pickAxe);
 		player.getInventory().addItem(this.cow);
 		player.getInventory().addItem(this.food);
-		player.sendMessage(ChatColor.BLACK + "Ah you think darkness is your ally? You merely adopted the dark. I was born in it, molded by it. I didn't see the light until I was already a man, by then it was nothing to me but blinding!");
+		player.sendMessage(ChatColor.DARK_PURPLE + "The Mole");
 	}
 }

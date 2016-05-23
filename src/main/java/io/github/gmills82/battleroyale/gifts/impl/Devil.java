@@ -53,6 +53,6 @@ public class Devil implements PlayerGift {
 		player.getInventory().setLeggings(this.pants);
 		player.getInventory().setHelmet(this.helm);
 
-		player.sendMessage(ChatColor.RED + "The greatest trick the Devil ever pulled was convincing the world he didn't exist");
+		player.sendMessage(ChatColor.RED + "The Devil");
 	}
 }

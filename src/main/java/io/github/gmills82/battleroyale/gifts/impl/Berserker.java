@@ -33,6 +33,6 @@ public class Berserker implements PlayerGift {
 		player.setSprinting(true);
 		player.getInventory().setItemInMainHand(this.sword);
 		player.getInventory().addItem(this.food);
-		player.sendMessage(ChatColor.DARK_PURPLE + "Large. Fast. Completely Insane.");
+		player.sendMessage(ChatColor.DARK_PURPLE + "Large. Fast. Completely Insane. The Beserker");
 	}
 }

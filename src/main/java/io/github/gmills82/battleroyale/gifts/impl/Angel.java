@@ -38,6 +38,6 @@ public class Angel implements PlayerGift {
 		player.getInventory().setItemInMainHand(this.sword);
 		player.getInventory().setChestplate(this.wings);
 
-		player.sendMessage(ChatColor.GOLD + "'Then the angel of the Lord went out and struck 185,000 in the camp of the Assyrians; and when men arose early in the morning, behold, all of these were dead.' " + ChatColor.BLACK + "Isaiah 37:36");
+		player.sendMessage(ChatColor.GOLD + "Angel of the Lord");
 	}
 }

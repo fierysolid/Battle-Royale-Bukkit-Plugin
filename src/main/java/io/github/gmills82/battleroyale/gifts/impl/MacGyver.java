@@ -39,6 +39,6 @@ public class MacGyver implements PlayerGift {
 		for(ItemStack stack: this.inventory) {
 			player.getInventory().addItem(stack);
 		}
-		player.sendMessage(ChatColor.BLUE + "Dear MacGyver: Enclosed is a paper clip, a rubber band, and a drinking straw. Please save my family");
+		player.sendMessage(ChatColor.DARK_PURPLE + "MacGyver");
 	}
 }

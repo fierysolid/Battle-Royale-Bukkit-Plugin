@@ -1,6 +1,7 @@
 package io.github.gmills82.battleroyale.gifts.impl;
 
 import io.github.gmills82.battleroyale.gifts.PlayerGift;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -62,6 +63,6 @@ public class Stalker implements PlayerGift {
 			playerInventory.addItem(itemStack);
 		}
 
-		player.sendMessage("Track your prey");
+		player.sendMessage(ChatColor.DARK_PURPLE + "Track your prey");
 	}
 }

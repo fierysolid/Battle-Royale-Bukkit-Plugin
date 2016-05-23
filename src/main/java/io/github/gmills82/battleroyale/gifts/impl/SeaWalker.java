@@ -1,6 +1,7 @@
 package io.github.gmills82.battleroyale.gifts.impl;
 
 import io.github.gmills82.battleroyale.gifts.PlayerGift;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -49,6 +50,6 @@ public class SeaWalker implements PlayerGift{
 	public void giveGift(Player player) {
 		player.getInventory().setItemInMainHand(this.fishingRod);
 		player.getInventory().setBoots(this.boots);
-		player.sendMessage("Every day is a new day. It is better to be lucky. But I would rather be exact. Then when luck comes you are ready.");
+		player.sendMessage(ChatColor.DARK_AQUA + "The Sea Walker");
 	}
 }

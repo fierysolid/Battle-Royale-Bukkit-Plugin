@@ -29,7 +29,6 @@ public class BlinkingSpirit implements PlayerGift{
 	public void giveGift(Player player) {
 		player.getInventory().addItem(this.pearls);
 		player.getInventory().setBoots(this.boots);
-		player.sendMessage(ChatColor.GREEN + "'Don't look at it Maybe it'll go away'" + ChatColor.WHITE +
-			"—Ib Halfheart, goblin tactician");
+		player.sendMessage(ChatColor.GREEN + "Blinking Spirit");
 	}
 }

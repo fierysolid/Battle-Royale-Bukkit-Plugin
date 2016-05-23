@@ -90,10 +90,9 @@ public class BattleRoyaleCommandService {
 		}
 		allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
 
-		Bukkit.getServer().broadcastMessage("The " + this.gameState.getBattleName() + " has begun between the players of world " + world.getName());
+		Bukkit.getServer().broadcastMessage("The Battle of " + this.gameState.getBattleName() + " has begun between the players of world " + world.getName());
 		Bukkit.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + world.getWorldBorder().getSize() + ChatColor.WHITE + " blocks square.");
 		Bukkit.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
-		Bukkit.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
 	}
 
 	//Command - COMMAND_PAUSE_BATTLE_ROYAL
