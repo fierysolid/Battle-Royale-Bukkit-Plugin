@@ -11,7 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -28,26 +27,25 @@ import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
  * @since 5/20/16
  */
 public class BattleRoyaleCommandService {
+
 	//Mins
 	private static final int PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = 7;
-	private static final int DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = 0;
-	private int initialWorldBorderSize;
-	private int initialWorldBorderDelay;
-	private final BattleRoyalePlugin plugin;
-	private BattleRoyaleGameState gameState;
+	private static final int DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = 5;
 
-	public BattleRoyaleCommandService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
-		this.initialWorldBorderSize = 250;
-		this.initialWorldBorderDelay = 0;
+	private BattleRoyalePlugin plugin;
+	private BattleRoyaleGameState gameState;
+	private static BattleRoyaleCommandService instance = null;
+
+	protected BattleRoyaleCommandService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
 		this.plugin = plugin;
 		this.gameState = gameState;
 	}
 
-	public BattleRoyaleCommandService(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState, int startingWorldBorderSize, int initialWorldBorderDelay) {
-		this.initialWorldBorderSize = startingWorldBorderSize;
-		this.initialWorldBorderDelay = initialWorldBorderDelay;
-		this.plugin = plugin;
-		this.gameState = gameState;
+	public static BattleRoyaleCommandService getInstance(BattleRoyalePlugin plugin, BattleRoyaleGameState gameState) {
+		if(null == instance) {
+			instance = new BattleRoyaleCommandService(plugin, gameState);
+		}
+		return instance;
 	}
 
 	//Command - COMMAND_BEGIN_BATTLE_ROYAL command
@@ -62,9 +60,7 @@ public class BattleRoyaleCommandService {
 		//Set battle name
 		this.gameState.setBattleName(battleName);
 
-		//Setup world border
-		this.setupWorldBorder(world, this.gameState.getCurrentBattlePlayersOnline());
-
+		//Spread players out in the world
 		this.spreadPlayers(world, this.gameState.getCurrentBattlePlayersOnline());
 
 		//Set pvp on
@@ -86,6 +82,17 @@ public class BattleRoyaleCommandService {
 
 		//Save off runnable so pause and resume commands have access to it
 		gameState.setDestructSequenceRunnable(destructSequenceRunnable);
+
+		//Announce game beginning
+		String allPlayerNames = "";
+		for (Player loopPlayer : battlePlayers) {
+			allPlayerNames += loopPlayer.getName() + ", ";
+		}
+		allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
+
+		Bukkit.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + world.getWorldBorder().getSize() + ChatColor.BLACK + " blocks square.");
+		Bukkit.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
+		Bukkit.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
 	}
 
 	//Command - COMMAND_PAUSE_BATTLE_ROYAL
@@ -186,27 +193,4 @@ public class BattleRoyaleCommandService {
 		}
 	}
 
-	private void setupWorldBorder(World world, Set<Player> battlePlayers) {
-		if(null != world) {
-
-			WorldBorder worldborder = world.getWorldBorder();
-
-			worldborder.setCenter(world.getSpawnLocation());
-			worldborder.setSize(initialWorldBorderSize, initialWorldBorderDelay);
-
-			String allPlayerNames = "";
-			for (Player loopPlayer : battlePlayers) {
-				allPlayerNames += loopPlayer.getName() + ", ";
-			}
-			allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
-
-			Bukkit.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + initialWorldBorderSize + ChatColor.BLACK + " blocks square.");
-			Bukkit.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
-			Bukkit.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
-
-			Bukkit.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
-		}else {
-			throw new IllegalArgumentException("World was null when setup attempted.");
-		}
-	}
 }

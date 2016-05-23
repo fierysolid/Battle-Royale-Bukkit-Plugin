@@ -3,6 +3,8 @@ package io.github.gmills82.battleroyale;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
+import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -22,15 +24,26 @@ public class BattleRoyaleGameState {
 	private String battleName;
 	private Set<Player> battlePlayers = new HashSet<Player>();
 	private int countdownToCatastrophy = 7;
+	private static final int initialWorldBorderSize = 250;
+	private static final int initialWorldBorderDelay = 0;
 
 	public BattleRoyaleGameState() {
+		World world = Bukkit.getWorlds().get(0);
+
 		//Set global pvp to false and set adventure mode
-		Bukkit.getWorlds().get(0).setPVP(false);
+		world.setPVP(false);
 
 		List<Player> allPlayers = Bukkit.getWorlds().get(0).getPlayers();
 		for(Player player: allPlayers) {
 			player.setGameMode(GameMode.ADVENTURE);
 		}
+
+		//Set the world border
+		WorldBorder worldborder = world.getWorldBorder();
+		worldborder.setCenter(world.getSpawnLocation());
+		worldborder.setSize(initialWorldBorderSize, initialWorldBorderDelay);
+
+		Bukkit.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
 	}
 
 	public Set<Player> getCurrentBattlePlayersOnline() {

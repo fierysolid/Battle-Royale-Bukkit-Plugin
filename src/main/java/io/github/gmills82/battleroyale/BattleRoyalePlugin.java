@@ -36,7 +36,7 @@ public class BattleRoyalePlugin extends JavaPlugin {
 		pluginManager.registerEvents(new BRPlayerDeathListener(gameState), this);
 
 		//Create Command Service
-		BattleRoyaleCommandService battleRoyaleCommandService = new BattleRoyaleCommandService(this, this.gameState);
+		BattleRoyaleCommandService battleRoyaleCommandService = BattleRoyaleCommandService.getInstance(this, this.gameState);
 
 		//Register Command Executors
 		this.getCommand(COMMAND_BEGIN_BATTLE_ROYAL).setExecutor(new BeginCommandExecutor(battleRoyaleCommandService));
