@@ -2,6 +2,8 @@ package io.github.gmills82.battleroyale.commands;
 
 import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.gifts.GiftsService;
+import io.github.gmills82.battleroyale.gifts.PlayerGift;
 import io.github.gmills82.battleroyale.runnables.DestructSequenceRunnable;
 import io.github.gmills82.battleroyale.util.LocationUtil;
 import org.bukkit.Bukkit;
@@ -52,6 +54,7 @@ public class BattleRoyaleCommandService {
 	public void beginBRComand(CommandSender commandSender, String battleName, Set<Player> battlePlayers) {
 		Player player = (Player) commandSender;
 		World world = player.getWorld();
+		GiftsService giftsService = GiftsService.getInstance();
 
 		//Set players on gameState
 		this.gameState.setBattlePlayers(battlePlayers);
@@ -70,6 +73,10 @@ public class BattleRoyaleCommandService {
 		//Set each player to game mode survival
 		for(Player battlePlayer: this.gameState.getBattlePlayers()) {
 			battlePlayer.setGameMode(GameMode.SURVIVAL);
+
+			//Distribute gifts
+			PlayerGift gift = giftsService.getRandomPlayerGift();
+			gift.giveGift(battlePlayer);
 		}
 
 		// Spawn scheduler process to remove sections of the map twice a day
