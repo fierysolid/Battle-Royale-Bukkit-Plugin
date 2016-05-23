@@ -1,6 +1,7 @@
 # Battle Royale Bukkit Plugin
 
-This plugin is designed to let you simulate the movie Battle Royal in a Minecraft Bukkit Hardcore world
+This plugin creates a Battle Royal in a Minecraft Bukkit Hardcore world. You are given a starting gift and spread out across a small world enclosed
+in a world border. Every 5 minutes an entire chunk of the world explodes. Be the last one standing to claim victory.
 
 ## Commands
 - /beginBattleRoyale \[battleName] \{player]...
@@ -9,3 +10,19 @@ This plugin is designed to let you simulate the movie Battle Royal in a Minecraf
 -- Pauses current battle. Chunk destruction pauses. Players are put into adventure mode and pvp is turned off
 - /resumeBattleRoyale
 -- Resumes the current battle.
+
+## Starting Player Gifts
+- Angel
+- AquaMan
+- Berserker
+- BlinkingSpirit
+- Demolitionist
+- Devil
+- Ender
+- Glutton
+- MacGyver
+- Mole
+- Necromancer
+- SeaWalker
+- Stalker
+- Übermensch
