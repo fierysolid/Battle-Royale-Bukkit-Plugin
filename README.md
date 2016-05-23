@@ -26,3 +26,7 @@ in a world border. Every 5 minutes an entire chunk of the world explodes. Be the
 - SeaWalker
 - Stalker
 - Übermensch
+
+## Dependencies
+- Minecraft 1.9.2 client profile
+- Bukkit 1.9.2 server
