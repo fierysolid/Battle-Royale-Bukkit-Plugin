@@ -27,6 +27,7 @@ public class Angel implements PlayerGift {
 
 		//Enchants
 		flamingSwordOfTruth.addEnchantment(Enchantment.FIRE_ASPECT, 2);
+		flamingSwordOfTruth.addEnchantment(Enchantment.DAMAGE_UNDEAD, 3);
 
 		this.sword = flamingSwordOfTruth;
 		this.wings = new ItemStack(Material.ELYTRA, 1);

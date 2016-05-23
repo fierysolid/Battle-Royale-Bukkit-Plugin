@@ -15,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Mole implements PlayerGift {
 
 	private ItemStack pickAxe;
+	private ItemStack food;
+	private ItemStack cow;
 
 	public Mole() {
 		//PickAxe
@@ -31,11 +33,16 @@ public class Mole implements PlayerGift {
 		pick.addEnchantment(Enchantment.DIG_SPEED, 5);
 
 		this.pickAxe = pick;
+
+		this.food = new ItemStack(Material.BOWL, 5);
+		this.cow = new ItemStack(Material.MONSTER_EGG, 1, (byte) 96);
 	}
 
 	@Override
 	public void giveGift(Player player) {
 		player.getInventory().setItemInMainHand(this.pickAxe);
+		player.getInventory().addItem(this.cow);
+		player.getInventory().addItem(this.food);
 		player.sendMessage(ChatColor.BLACK + "Ah you think darkness is your ally? You merely adopted the dark. I was born in it, molded by it. I didn't see the light until I was already a man, by then it was nothing to me but blinding!");
 	}
 }

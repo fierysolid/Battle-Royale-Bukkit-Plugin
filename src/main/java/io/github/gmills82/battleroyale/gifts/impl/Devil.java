@@ -30,7 +30,7 @@ public class Devil implements PlayerGift {
 		ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
 		ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
 		ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS);
-		ItemStack helm = new ItemStack(Material.SKULL_ITEM, 1, (byte) 0);
+		ItemStack helm = new ItemStack(Material.SKULL_ITEM, 1, (byte) 1);
 
 		chest.addEnchantment(Enchantment.PROTECTION_FIRE, 4);
 		boots.addEnchantment(Enchantment.PROTECTION_FIRE, 4);

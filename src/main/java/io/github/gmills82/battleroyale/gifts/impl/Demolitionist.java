@@ -26,6 +26,7 @@ public class Demolitionist implements PlayerGift {
 		demoInventory.add(redstone);
 		demoInventory.add(string);
 		demoInventory.add(tripWireHook);
+		demoInventory.add(new ItemStack(Material.MONSTER_EGG, 4, (byte) 50 ));
 	}
 
 	@Override
