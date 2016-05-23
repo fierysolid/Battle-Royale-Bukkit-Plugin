@@ -43,7 +43,6 @@ public class BattleRoyaleGameState {
 		worldborder.setCenter(world.getSpawnLocation());
 		worldborder.setSize(initialWorldBorderSize, initialWorldBorderDelay);
 
-		Bukkit.getLogger().info("A Battle Royal has begun between the players of world " + world.getName());
 	}
 
 	public Set<Player> getCurrentBattlePlayersOnline() {

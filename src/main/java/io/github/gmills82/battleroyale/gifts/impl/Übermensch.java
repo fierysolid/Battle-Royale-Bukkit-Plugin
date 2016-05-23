@@ -49,6 +49,6 @@ public class Übermensch implements PlayerGift {
 	public void giveGift(Player player) {
 		player.getInventory().setChestplate(this.chest);
 		player.getInventory().setItemInMainHand(axe);
-		player.sendMessage(ChatColor.BLACK + "What is the ape to man? A laughingstock or a painful embarrassment. And man shall be just that for the overman: a laughingstock or a painful embarrassment...");
+		player.sendMessage(ChatColor.RED + "What is the ape to man? A laughingstock or a painful embarrassment. And man shall be just that for the overman: a laughingstock or a painful embarrassment...");
 	}
 }

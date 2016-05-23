@@ -29,8 +29,8 @@ import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
 public class BattleRoyaleCommandService {
 
 	//Mins
-	private static final int PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = 7;
-	private static final int DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = 5;
+	private static final int PERIOD_OF_CHUNK_DESTRUCT_SEQUENCE = 2;
+	private static final int DELAY_OF_CHUNK_DESTRUCT_SEQUENCE = 0;
 
 	private BattleRoyalePlugin plugin;
 	private BattleRoyaleGameState gameState;
@@ -90,7 +90,8 @@ public class BattleRoyaleCommandService {
 		}
 		allPlayerNames = allPlayerNames.substring(0, allPlayerNames.length() - 2);
 
-		Bukkit.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + world.getWorldBorder().getSize() + ChatColor.BLACK + " blocks square.");
+		Bukkit.getServer().broadcastMessage("The " + this.gameState.getBattleName() + " has begun between the players of world " + world.getName());
+		Bukkit.getServer().broadcastMessage("The fighting arena is " + ChatColor.AQUA + world.getWorldBorder().getSize() + ChatColor.WHITE + " blocks square.");
 		Bukkit.getServer().broadcastMessage("Fierce contestants include: " + ChatColor.GOLD + allPlayerNames);
 		Bukkit.getServer().broadcastMessage("Life is a game. So fight for survival and see if you're worth it.");
 	}
