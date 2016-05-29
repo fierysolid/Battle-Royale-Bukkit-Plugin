@@ -1,6 +1,9 @@
 package io.github.gmills82.battleroyale.runnables;
 
 import io.github.gmills82.battleroyale.BattleRoyaleGameState;
+import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.catastrophy.Catastrophy;
+import io.github.gmills82.battleroyale.catastrophy.CatastrophyService;
 import io.github.gmills82.battleroyale.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -9,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
+
 /**
  * @author Grant Mills
  * @since 5/20/16
@@ -16,18 +21,23 @@ import org.bukkit.scheduler.BukkitTask;
 public class DestroyChunksRunnable extends BukkitRunnable {
 
 	private static final long EXPLOSION_POWER = 30L;
+	private static final double DELAY_BEFORE_FIRST_CATASTROPHE = 0.5;
+	private static final Integer PERIOD_BETWEEN_CATASTROPHIES = 2;
 	private Chunk chunkToDestroy;
 	private BukkitTask playerWarningRunnable;
 	private BattleRoyaleGameState gameState;
+	private BattleRoyalePlugin plugin;
 
-	public DestroyChunksRunnable(Chunk chunkToDestroy, BukkitTask playerWarningRunnable, BattleRoyaleGameState gameState) {
+	public DestroyChunksRunnable(BattleRoyalePlugin plugin, Chunk chunkToDestroy, BukkitTask playerWarningRunnable, BattleRoyaleGameState gameState) {
 		this.chunkToDestroy = chunkToDestroy;
 		this.playerWarningRunnable = playerWarningRunnable;
 		this.gameState = gameState;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public void run() {
+		CatastrophyService catastrophyService = CatastrophyService.getInstance();
 		playerWarningRunnable.cancel();
 
 		//Fire off explosions down the center of the chunk
@@ -56,8 +66,13 @@ public class DestroyChunksRunnable extends BukkitRunnable {
 		//Ever closer to impending doom
 		this.gameState.lowerCatastrophyCounter();
 
-		//TODO: If countdown is at zero spawn catastrophy runnable
-		//TODO: Update gamestate
+		// If countdown is at zero spawn catastrophy runnable
+		if(this.gameState.getCountdownToCatastrophy() == 0) {
+			Catastrophy catastrophy = catastrophyService.getRandomCatastophy();
+			BukkitTask catastrophyRunnable = new CatastrophyRunnable(Bukkit.getServer().getWorlds().get(0), catastrophy).
+				runTaskTimer(this.plugin, convertMinsToTicks(DELAY_BEFORE_FIRST_CATASTROPHE), convertMinsToTicks(PERIOD_BETWEEN_CATASTROPHIES));
+			this.gameState.setCatastrophyRunnable(catastrophyRunnable);
+		}
 
 		//Announce destruction
 		Bukkit.getServer().broadcastMessage("Quadrant destroyed at x: " + chunkCenter.getX() + " and z: " + chunkCenter.getZ());

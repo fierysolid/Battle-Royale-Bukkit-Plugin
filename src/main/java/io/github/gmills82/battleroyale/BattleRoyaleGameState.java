@@ -103,4 +103,11 @@ public class BattleRoyaleGameState {
 		return countdownToCatastrophy;
 	}
 
+	public BukkitTask getCatastrophyRunnable() {
+		return catastrophyRunnable;
+	}
+
+	public void setCatastrophyRunnable(BukkitTask catastrophyRunnable) {
+		this.catastrophyRunnable = catastrophyRunnable;
+	}
 }

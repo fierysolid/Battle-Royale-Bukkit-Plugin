@@ -55,7 +55,7 @@ public class DestructSequenceRunnable extends BukkitRunnable {
 		gameState.setWarnPlayersRunnable(playerWarningRunnable);
 
 		// Schedule actual destruction
-		BukkitTask destoryChunksRunnable = new DestroyChunksRunnable(chunkToDestroy, playerWarningRunnable, this.gameState).runTaskLater(this.plugin, convertMinsToTicks(DELAY_BEFORE_CHUNK_DESTRUCTION));
+		BukkitTask destoryChunksRunnable = new DestroyChunksRunnable(this.plugin, chunkToDestroy, playerWarningRunnable, this.gameState).runTaskLater(this.plugin, convertMinsToTicks(DELAY_BEFORE_CHUNK_DESTRUCTION));
 	}
 
 	private Chunk determineChunkToDestroy(World world) {

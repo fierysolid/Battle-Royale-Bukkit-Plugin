@@ -100,6 +100,7 @@ public class BattleRoyaleCommandService {
 		//Cancel all runnables
 		this.gameState.getWarnPlayersRunnable().cancel();
 		this.gameState.getDestructSequenceRunnable().cancel();
+		this.gameState.getCatastrophyRunnable().cancel();
 
 		//Disable PVP
 		Player player = (Player) commandSender;
