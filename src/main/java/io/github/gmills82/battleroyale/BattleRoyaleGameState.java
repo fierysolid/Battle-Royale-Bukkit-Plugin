@@ -20,7 +20,6 @@ public class BattleRoyaleGameState {
 	private Set<Chunk> destroyedChunkSet = new HashSet<Chunk>();
 	private BukkitTask destructSequenceRunnable;
 	private BukkitTask warnPlayersRunnable;
-	private BukkitTask catastrophyRunnable;
 	private String battleName;
 	private Set<Player> battlePlayers = new HashSet<Player>();
 	private int countdownToCatastrophy = 7;
@@ -34,7 +33,7 @@ public class BattleRoyaleGameState {
 		world.setPVP(false);
 
 		List<Player> allPlayers = Bukkit.getWorlds().get(0).getPlayers();
-		for(Player player: allPlayers) {
+		for (Player player : allPlayers) {
 			player.setGameMode(GameMode.ADVENTURE);
 		}
 
@@ -47,8 +46,8 @@ public class BattleRoyaleGameState {
 
 	public Set<Player> getCurrentBattlePlayersOnline() {
 		Set<Player> onlineBattlePlayers = new HashSet<Player>();
-		for(Player player : battlePlayers) {
-			if(player.isOnline()) {
+		for (Player player : battlePlayers) {
+			if (player.isOnline()) {
 				onlineBattlePlayers.add(player);
 			}
 		}
@@ -103,11 +102,4 @@ public class BattleRoyaleGameState {
 		return countdownToCatastrophy;
 	}
 
-	public BukkitTask getCatastrophyRunnable() {
-		return catastrophyRunnable;
-	}
-
-	public void setCatastrophyRunnable(BukkitTask catastrophyRunnable) {
-		this.catastrophyRunnable = catastrophyRunnable;
-	}
 }

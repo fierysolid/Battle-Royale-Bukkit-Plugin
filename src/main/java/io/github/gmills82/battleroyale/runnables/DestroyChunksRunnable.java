@@ -21,8 +21,6 @@ import static io.github.gmills82.battleroyale.util.TicksUtil.convertMinsToTicks;
 public class DestroyChunksRunnable extends BukkitRunnable {
 
 	private static final long EXPLOSION_POWER = 30L;
-	private static final double DELAY_BEFORE_FIRST_CATASTROPHE = 0.5;
-	private static final Integer PERIOD_BETWEEN_CATASTROPHIES = 2;
 	private Chunk chunkToDestroy;
 	private BukkitTask playerWarningRunnable;
 	private BattleRoyaleGameState gameState;
@@ -69,9 +67,12 @@ public class DestroyChunksRunnable extends BukkitRunnable {
 		// If countdown is at zero spawn catastrophy runnable
 		if(this.gameState.getCountdownToCatastrophy() == 0) {
 			Catastrophy catastrophy = catastrophyService.getRandomCatastophy();
-			BukkitTask catastrophyRunnable = new CatastrophyRunnable(Bukkit.getServer().getWorlds().get(0), catastrophy).
-				runTaskTimer(this.plugin, convertMinsToTicks(DELAY_BEFORE_FIRST_CATASTROPHE), convertMinsToTicks(PERIOD_BETWEEN_CATASTROPHIES));
-			this.gameState.setCatastrophyRunnable(catastrophyRunnable);
+
+			//Warn players
+			catastrophy.warnPlayers();
+
+			new CatastrophyRunnable(Bukkit.getServer().getWorlds().get(0), catastrophy).
+				runTaskLater(this.plugin, convertMinsToTicks(catastrophy.getDelay()));
 		}
 
 		//Announce destruction

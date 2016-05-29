@@ -1,6 +1,6 @@
 name: BattleRoyale
 main: io.github.gmills82.battleroyale.BattleRoyalePlugin
-version: 1.000.000
+version: 1.004.000
 commands:
   beginBattleRoyale:
     description: Begin the Battle Royale
@@ -17,3 +17,8 @@ commands:
     usage: /<command>
     permission: <plugin name>.basic
     permission-message: You don't have <permission>
+  floodBR:
+      description: Begin flood catastrophy
+      usage: /<command>
+      permission: <plugin name>.basic
+      permission-message: You don't have <permission>

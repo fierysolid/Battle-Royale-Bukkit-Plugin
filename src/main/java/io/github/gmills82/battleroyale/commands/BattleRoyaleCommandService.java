@@ -2,6 +2,8 @@ package io.github.gmills82.battleroyale.commands;
 
 import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import io.github.gmills82.battleroyale.BattleRoyalePlugin;
+import io.github.gmills82.battleroyale.catastrophy.Catastrophy;
+import io.github.gmills82.battleroyale.catastrophy.impl.Flood;
 import io.github.gmills82.battleroyale.gifts.GiftsService;
 import io.github.gmills82.battleroyale.gifts.PlayerGift;
 import io.github.gmills82.battleroyale.runnables.DestructSequenceRunnable;
@@ -136,6 +138,12 @@ public class BattleRoyaleCommandService {
 
 		//Message server
 		Bukkit.getServer().broadcastMessage(ChatColor.RED + "The fight resumes!");
+	}
+
+	//Command - COMMAND_FLOOD
+	public void floodBRCommand(CommandSender commandSender) {
+		Catastrophy flood = new Flood();
+		flood.initiateCatastrophy(((Player) commandSender).getWorld());
 	}
 
 	private void spreadPlayers(World world, Set<Player> battlePlayers) {

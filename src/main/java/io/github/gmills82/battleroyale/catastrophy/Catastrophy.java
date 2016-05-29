@@ -7,5 +7,9 @@ import org.bukkit.World;
  * @since 5/29/16
  */
 public interface Catastrophy {
+	double getDelay();
+
+	void warnPlayers();
+
 	void initiateCatastrophy(World world);
 }
