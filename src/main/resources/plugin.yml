@@ -17,7 +17,7 @@ commands:
     usage: /<command>
     permission: <plugin name>.basic
     permission-message: You don't have <permission>
-  floodBR:
+  catastrophy:
       description: Begin flood catastrophy
       usage: /<command>
       permission: <plugin name>.basic

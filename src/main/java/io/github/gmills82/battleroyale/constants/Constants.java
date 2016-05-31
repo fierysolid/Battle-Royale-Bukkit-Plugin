@@ -9,5 +9,5 @@ public class Constants {
 	public static final String COMMAND_BEGIN_BATTLE_ROYAL = "beginBattleRoyale";
 	public static final String COMMAND_PAUSE_BATTLE_ROYAL = "pauseBattleRoyale";
 	public static final String COMMAND_RESUME_BATTLE_ROYAL = "resumeBattleRoyale";
-	public static final String COMMAND_FLOOD_BR = "floodBR";
+	public static final String COMMAND_CATASTROPHY = "catastrophy";
 }

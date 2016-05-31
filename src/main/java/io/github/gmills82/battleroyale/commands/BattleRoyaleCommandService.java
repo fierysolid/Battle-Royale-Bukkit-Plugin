@@ -3,7 +3,7 @@ package io.github.gmills82.battleroyale.commands;
 import io.github.gmills82.battleroyale.BattleRoyaleGameState;
 import io.github.gmills82.battleroyale.BattleRoyalePlugin;
 import io.github.gmills82.battleroyale.catastrophy.Catastrophy;
-import io.github.gmills82.battleroyale.catastrophy.impl.Flood;
+import io.github.gmills82.battleroyale.catastrophy.impl.NetherInvasion;
 import io.github.gmills82.battleroyale.gifts.GiftsService;
 import io.github.gmills82.battleroyale.gifts.PlayerGift;
 import io.github.gmills82.battleroyale.runnables.DestructSequenceRunnable;
@@ -102,7 +102,6 @@ public class BattleRoyaleCommandService {
 		//Cancel all runnables
 		this.gameState.getWarnPlayersRunnable().cancel();
 		this.gameState.getDestructSequenceRunnable().cancel();
-		this.gameState.getCatastrophyRunnable().cancel();
 
 		//Disable PVP
 		Player player = (Player) commandSender;
@@ -140,10 +139,10 @@ public class BattleRoyaleCommandService {
 		Bukkit.getServer().broadcastMessage(ChatColor.RED + "The fight resumes!");
 	}
 
-	//Command - COMMAND_FLOOD
-	public void floodBRCommand(CommandSender commandSender) {
-		Catastrophy flood = new Flood();
-		flood.initiateCatastrophy(((Player) commandSender).getWorld());
+	//Command - COMMAND_CATASTROPHY
+	public void catastrophyCommand(CommandSender commandSender) {
+		Catastrophy nether = new NetherInvasion();
+		nether.initiateCatastrophy(((Player) commandSender).getWorld());
 	}
 
 	private void spreadPlayers(World world, Set<Player> battlePlayers) {

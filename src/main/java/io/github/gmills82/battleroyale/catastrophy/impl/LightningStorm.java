@@ -9,6 +9,16 @@ import org.bukkit.World;
  */
 public class LightningStorm implements Catastrophy {
 	@Override
+	public double getDelay() {
+		return 0;
+	}
+
+	@Override
+	public void warnPlayers() {
+
+	}
+
+	@Override
 	public void initiateCatastrophy(World world) {
 
 	}
